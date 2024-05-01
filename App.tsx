@@ -1,7 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import type {PropsWithChildren} from 'react';
-import {Text, TouchableOpacity, View, Image, Button, ScrollView} from 'react-native';
-
+import {
+    Text,
+    TouchableOpacity,
+    View,
+    Image,
+    Button,
+    ScrollView,
+    LayoutAnimation,
+} from 'react-native';
 import {
     Colors,
     DebugInstructions,
@@ -10,7 +17,8 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import styles from './styles';
+import styles, {color} from './styles';
+import {toggleAnimation} from './toggleAnimation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 type BookingTextProps = {
     content: string;
@@ -23,7 +31,7 @@ const BookingHeaderText = (props: BookingTextProps) => {
                 styles.bookingHeaderText,
                 {color: props.disabled ? '#D0D0D0' : '#034EA2'},
             ]}
-            numberOfLines={2}>
+            numberOfLines={3}>
             {props.content}
         </Text>
     );
@@ -97,6 +105,7 @@ const HeadingBook = () => {
 };
 
 const BookingResult = () => {
+    //BUG: cannot display color of bookingBar
     return (
         <View>
             <View style={styles.bookingBar}></View>
@@ -112,6 +121,7 @@ const BookingResult = () => {
 type BookingLocationContentProps = {
     setHeading: React.Dispatch<React.SetStateAction<string>>;
     setLocation: React.Dispatch<React.SetStateAction<string>>;
+    setOpenDropDown: React.Dispatch<React.SetStateAction<string>>;
 };
 const BookingLocationContent = (props: BookingLocationContentProps) => {
     const buttons = [
@@ -128,13 +138,14 @@ const BookingLocationContent = (props: BookingLocationContentProps) => {
         {content: 'Nghệ An'},
     ];
     return (
-        <View style={styles.bookingLocationContent}>
+        <View style={[ styles.bookingLocationContent, styles.bookingShadowBlock ]}>
             {buttons.map((button, index) => (
                 <TouchableOpacity
                     style={styles.bookingLocationContentButton}
                     onPress={() => {
                         props.setHeading('Chọn vị trí - ' + button.content);
                         props.setLocation(button.content);
+                        props.setOpenDropDown('dropdown2');
                     }}>
                     <Text style={styles.bookingLocationContentText}>
                         {button.content}
@@ -154,19 +165,39 @@ type BookingLocationProps = {
 const BookingLocation = (props: BookingLocationProps) => {
     const [heading, setHeading] = useState('Chọn vị trí');
     return (
-        <View style={[styles.bookingDropDownParent, styles.bookingShadowBlock]}>
-            <View style={styles.bookingDropDownHeader}>
+        <View style={[styles.bookingDropDownParent ]}>
+
+            { /*BUG: just using for sub component, can not use for parent dropdown */}
+            <View
+                style={[
+                    styles.bookingDropDownHeader,
+                    styles.bookingShadowBlock
+                ]}>
                 <BookingHeading content={heading} />
                 <TouchableOpacity
-                    style={styles.bookingDropDownButton}
-                    onPress={() => props.setOpenDropdown('dropdown1')}>
+                    style={[
+                        styles.bookingDropDownButton,
+                        {
+                            backgroundColor:
+                                props.openDropdown === 'dropdown1'
+                                    ? color.button
+                                    : color.background,
+                        },
+                    ]}
+                    onPress={() => {
+                        props.setOpenDropdown('dropdown1');
+                    }}>
                     <Icon
                         name={
                             props.openDropdown === 'dropdown1'
                                 ? 'caret-up'
                                 : 'caret-down'
                         }
-                        color="#ffffff"
+                        color={
+                            props.openDropdown === 'dropdown1'
+                                ? '#ffffff'
+                                : color.button
+                        }
                         size={28}
                     />
                 </TouchableOpacity>
@@ -176,6 +207,7 @@ const BookingLocation = (props: BookingLocationProps) => {
                 <BookingLocationContent
                     setHeading={setHeading}
                     setLocation={props.setLocation}
+                    setOpenDropDown={props.setOpenDropdown}
                 />
             )}
         </View>
@@ -187,33 +219,46 @@ type BookingFilmProps = {
     setOpenDropdown: React.Dispatch<React.SetStateAction<string>>;
     setFilm: React.Dispatch<React.SetStateAction<string>>;
 };
+
 const BookingFilm = (props: BookingFilmProps) => {
     const [heading, setHeading] = useState('Chọn phim');
     return (
-        <View style={[styles.bookingDropDownParent, styles.bookingShadowBlock]}>
-            <View style={styles.bookingDropDownHeader}>
+        <View style={[styles.bookingDropDownParent]}>
+            <View
+                style={[
+                    styles.bookingDropDownHeader,
+                    styles.bookingShadowBlock,
+                ]}>
                 <BookingHeading content={heading} />
                 <TouchableOpacity
-                    style={styles.bookingDropDownButton}
-                    onPress={() => props.setOpenDropdown('dropdown2')}>
+                    style={[
+                        styles.bookingDropDownButton,
+                        {
+                            backgroundColor:
+                                props.openDropdown === 'dropdown2'
+                                    ? color.button
+                                    : color.background,
+                        },
+                    ]}
+                    onPress={() => {
+                        props.setOpenDropdown('dropdown2');
+                    }}>
                     <Icon
                         name={
                             props.openDropdown === 'dropdown2'
                                 ? 'caret-up'
                                 : 'caret-down'
                         }
-                        color="#ffffff"
+                        color={
+                            props.openDropdown === 'dropdown2'
+                                ? '#ffffff'
+                                : color.button
+                        }
                         size={28}
                     />
                 </TouchableOpacity>
             </View>
-
-            {props.openDropdown === 'dropdown2' && (
-                <BookingLocationContent
-                    setHeading={setHeading}
-                    setLocation={props.setLocation}
-                />
-            )}
+            {props.openDropdown === 'dropdown2' && <Text>Hello</Text>}
         </View>
     );
 };
@@ -225,23 +270,27 @@ const BookingStage1 = () => {
     const [openDropDown, setOpenDropDown] = useState('dropdown1');
 
     return (
-        <ScrollView>
+        <View>
             <BookingLocation
                 openDropdown={openDropDown}
                 setOpenDropdown={setOpenDropDown}
                 setLocation={setLocation}
             />
-
-        </ScrollView>
+            <BookingFilm
+                openDropdown={openDropDown}
+                setOpenDropdown={setOpenDropDown}
+                setFilm={setFilm}
+            />
+        </View>
     );
 };
 const App = () => {
     return (
-        <View style={styles.bookingBody}>
+        <ScrollView style={styles.bookingBody}>
             <HeadingBook />
             <BookingResult />
             <BookingStage1 />
-        </View>
+        </ScrollView>
     );
 };
 

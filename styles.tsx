@@ -3,6 +3,7 @@ const color = {
     background: '#F9F9F9',
     block: '#ffffff',
     shadowBlock: '#171717',
+    button:'#034ea2',
 };
 const styles = StyleSheet.create({
     bookingBody: {
@@ -47,11 +48,13 @@ const styles = StyleSheet.create({
         backgroundColor: color.block,
         paddingVertical: 40,
     },
+    //BUG: can not set color of bookingBar
     bookingBar: {
         borderWidth: 5,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         width: '100%',
+        backgroundColor: 'red',
     },
 
     bookingDropDownParent: {
@@ -65,6 +68,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
+        paddingVertical: 10
     },
     bookingHeading: {
         fontFamily: 'NunitoSans_ExtraBold',
@@ -76,7 +80,7 @@ const styles = StyleSheet.create({
     },
     bookingDropDownButton: {
         borderRadius: 50,
-        backgroundColor: '#034ea2',
+        backgroundColor: color.button,
         width: 37,
         height: 37,
         marginRight: 10,
@@ -85,11 +89,11 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginEnd: 20,
     },
+    //BUG: just using for sub component, can not use for parent dropdown
     bookingShadowBlock: {
         shadowColor: color.shadowBlock,
-        shadowOffset: {width: -2, height: 20},
-        shadowOpacity: 0.6,
-        shadowRadius: 3,
+        shadowOffset: {width: -2, height: 4},
+        elevation: 5,
     },
     bookingLocationContent: {
         flexDirection: 'row',
@@ -116,3 +120,4 @@ const styles = StyleSheet.create({
     },
 });
 export default styles;
+export {color};
