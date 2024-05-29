@@ -18,18 +18,17 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import styles, {color} from './styles';
-import {toggleAnimation} from './toggleAnimation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 type BookingTextProps = {
     content: string;
-    disabled: boolean;
+    //disabled: boolean;
 };
 const BookingHeaderText = (props: BookingTextProps) => {
     return (
         <Text
             style={[
                 styles.bookingHeaderText,
-                {color: props.disabled ? '#D0D0D0' : '#034EA2'},
+                /*{color: props.disabled ? '#D0D0D0' : '#034EA2'},*/
             ]}
             numberOfLines={3}>
             {props.content}
@@ -55,11 +54,12 @@ type BookingLocationHeadingProps = {
 const BookingHeading = (props: BookingLocationHeadingProps) => {
     return <Text style={styles.bookingHeading}>{props.content}</Text>;
 };
-const HeadingBook = () => {
-    const [selectedButton, setSelectedButton] = useState(0);
+
+const HeadingBook = ({selectedButton, setSelectedButton}) => {
+    //const [selectedButton, setSelectedButton] = useState(0);
     const buttons = [
         {
-            content: `Chọn phim / Rạp \n/  Xuất`,
+            content: `Chọn phim / Rạp /  Xuất`,
             style: [styles.bookingTouchOpacity, {width: '24%'}],
             disabled: false,
         },
@@ -69,7 +69,7 @@ const HeadingBook = () => {
             disabled: true,
         },
         {
-            content: `Chọn thức\n ăn`,
+            content: `Chọn \nthức ăn`,
             style: styles.bookingTouchOpacity,
             disabled: true,
         },
@@ -90,10 +90,13 @@ const HeadingBook = () => {
                 <TouchableOpacity
                     style={button.style}
                     onPress={() => setSelectedButton(index)}
-                    disabled={button.disabled}>
+                    /*disabled={button.disabled}*/
+                    numberOfLines={2}
+                    adjustsFontSizeToFit={true}>
                     <BookingHeaderText
                         content={button.content}
-                        disabled={button.disabled}></BookingHeaderText>
+                        /*disabled={button.disabled}*/
+                    />
                     <BookingUnderlineHeader
                         selectedButton={
                             index === selectedButton ? true : false
@@ -138,7 +141,8 @@ const BookingLocationContent = (props: BookingLocationContentProps) => {
         {content: 'Nghệ An'},
     ];
     return (
-        <View style={[ styles.bookingLocationContent, styles.bookingShadowBlock ]}>
+        <View
+            style={[styles.bookingLocationContent, styles.bookingShadowBlock]}>
             {buttons.map((button, index) => (
                 <TouchableOpacity
                     style={styles.bookingLocationContentButton}
@@ -165,13 +169,12 @@ type BookingLocationProps = {
 const BookingLocation = (props: BookingLocationProps) => {
     const [heading, setHeading] = useState('Chọn vị trí');
     return (
-        <View style={[styles.bookingDropDownParent ]}>
-
-            { /*BUG: just using for sub component, can not use for parent dropdown */}
+        <View style={[styles.bookingDropDownParent]}>
+            {/*BUG: just using for sub component, can not use for parent dropdown */}
             <View
                 style={[
                     styles.bookingDropDownHeader,
-                    styles.bookingShadowBlock
+                    styles.bookingShadowBlock,
                 ]}>
                 <BookingHeading content={heading} />
                 <TouchableOpacity
@@ -284,14 +287,23 @@ const BookingStage1 = () => {
         </View>
     );
 };
-const App = () => {
+const BookingStage1Area = () => {
     return (
-        <ScrollView style={styles.bookingBody}>
-            <HeadingBook />
+        <View>
             <BookingResult />
             <BookingStage1 />
+        </View>
+    );
+};
+const App = () => {
+    const [selectedButton, setSelectedButton] = useState(0);
+    return (
+        <ScrollView style={styles.bookingBody}>
+            <HeadingBook selectedButton={selectedButton} setSelectedButton={setSelectedButton}/>
+            {
+                selectedButton === 0 && <BookingStage1Area /> 
+            }
         </ScrollView>
     );
 };
-
 export default App;

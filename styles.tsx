@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     },
 
     bookingDropDownParent: {
-        backgroundColor: '#fffffff',
+        backgroundColor: 'red',
         marginVertical: 20,
         width: '100%',
     },
