@@ -1,13 +1,14 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
+import firestore from '@react-native-firebase/firestore';
 import {
     Text,
     TouchableOpacity,
     View,
     Image,
-    Button,
     ScrollView,
     LayoutAnimation,
+    ActivityIndicator,
 } from 'react-native';
 import {
     Colors,
@@ -19,6 +20,7 @@ import {
 
 import styles, {color} from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 type BookingTextProps = {
     content: string;
     //disabled: boolean;
@@ -222,6 +224,41 @@ type BookingFilmProps = {
     setOpenDropdown: React.Dispatch<React.SetStateAction<string>>;
     setFilm: React.Dispatch<React.SetStateAction<string>>;
 };
+type getArrFilmsProps = {
+    city: string;
+};
+const getArrFilms = (props: getArrFilmsProps) => {
+    const [loading, setLoading] = useState(true); // Set loading to true on component mount
+    const [cinemas, setCinemas] = useState([]); // Initial empty array of users
+    useEffect(() => {
+        const getCinemas = firestore()
+            .collection('cinemas')
+            .onSnapshot(querySnapshot => {
+                const arrUsers = [];
+
+                querySnapshot.forEach(documentSnapshot => {
+                    arrUsers.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id,
+                    });
+                });
+
+                setCinemas(arrUsers);
+                setLoading(false);
+            });
+
+        // Unsubscribe from events when no longer in use
+        return () => getCinemas();
+    }, []);
+    const arrKeyCinmemasCity: string[] = [];
+    cinemas.forEach((cinema: { city: string; key: string }) => {
+        if (cinema.city === props.city) {
+            arrKeyCinmemasCity.push(cinema.key);
+        }
+    });
+    if (loading) return <ActivityIndicator />;
+    console.log(arrKeyCinmemasCity);
+};
 
 const BookingFilm = (props: BookingFilmProps) => {
     const [heading, setHeading] = useState('Chọn phim');
@@ -272,6 +309,9 @@ const BookingStage1 = () => {
     const [showtime, setShowtime] = useState('');
     const [openDropDown, setOpenDropDown] = useState('dropdown1');
 
+    useEffect(() => {
+        getArrFilms({city: location});
+    }, [location]);
     return (
         <View>
             <BookingLocation
@@ -299,10 +339,11 @@ const App = () => {
     const [selectedButton, setSelectedButton] = useState(0);
     return (
         <ScrollView style={styles.bookingBody}>
-            <HeadingBook selectedButton={selectedButton} setSelectedButton={setSelectedButton}/>
-            {
-                selectedButton === 0 && <BookingStage1Area /> 
-            }
+            <HeadingBook
+                selectedButton={selectedButton}
+                setSelectedButton={setSelectedButton}
+            />
+            {selectedButton === 0 && <BookingStage1Area />}
         </ScrollView>
     );
 };

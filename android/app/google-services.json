@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "739326894116",
+    "project_id": "didong-reactnative",
+    "storage_bucket": "didong-reactnative.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739326894116:android:6e3a0aca054fabab1938b1",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBercxa9lFLtC-ZP3q4WvJDKHtjRBOwfoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739326894116:android:b452d431263d5acb1938b1",
+        "android_client_info": {
+          "package_name": "team.final"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBercxa9lFLtC-ZP3q4WvJDKHtjRBOwfoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739326894116:android:33c94c530969c6e21938b1",
+        "android_client_info": {
+          "package_name": "test.firsebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBercxa9lFLtC-ZP3q4WvJDKHtjRBOwfoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
