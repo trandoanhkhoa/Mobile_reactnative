@@ -22,7 +22,7 @@
 ~~1. Shadow on block~~
 2. Can not display color of bar in Booking result
 3. Configure shadow on whole view 
-
+3. Fix error icon not display
 
 
 
@@ -39,3 +39,9 @@
 1. Create CDM
 2. Add it into firebase
 3. Complete first stage of booking
+
+# Study 
+1. Clean code
+# NOTE
+1. year in database is only considered as only one year.
+2. every film can watch every day
